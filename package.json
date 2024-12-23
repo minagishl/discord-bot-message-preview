@@ -8,6 +8,7 @@
   "scripts": {
     "build": "yarn rm && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "tsx src/index.ts",
+    "dev:watch": "tsx watch src/index.ts",
     "esbuild": "yarn rm && node scripts/build.js",
     "check": "biome check ./src",
     "check:write": "biome check --write ./src",
