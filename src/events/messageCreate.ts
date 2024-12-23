@@ -39,7 +39,23 @@ export default {
           continue;
         }
         const linkMessage = await channel.messages.fetch(messageId);
-        await message.channel.send(linkMessage.content);
+        await message.channel.send({
+          embeds: [
+            {
+              description: linkMessage.content,
+              color: undefined,
+              author: {
+                name: linkMessage.author.tag,
+                url: linkMessage.url,
+                icon_url: linkMessage.author.displayAvatarURL(),
+              },
+              footer: {
+                text: `In #${channel.name} - ${linkMessage.createdAt.toLocaleString()}`,
+                icon_url: guild.iconURL() ?? "",
+              },
+            },
+          ],
+        });
       } catch (error) {
         console.error(`Error processing message link: ${link}`, error);
       }
