@@ -1,4 +1,4 @@
-import { Events, type Message } from 'discord.js';
+import { Events, type Message, EmbedBuilder } from 'discord.js';
 
 export default {
   name: Events.MessageCreate,
@@ -40,35 +40,61 @@ export default {
         }
 
         const linkMessage = await channel.messages.fetch(messageId);
-        await message.channel.send({
-          embeds: [
-            {
-              description: linkMessage.content,
-              color: undefined,
-              author: {
-                name: linkMessage.author.tag,
-                url: linkMessage.url,
-                icon_url: linkMessage.author.displayAvatarURL(),
-              },
-              footer: {
-                text: `In #${channel.name} - ${linkMessage.createdAt
-                  .toLocaleString('ja-JP', {
-                    timeZone: 'Asia/Tokyo',
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                  })
-                  .replace(/\//g, '/')}`,
-                icon_url: guild.iconURL() ?? '',
-              },
-            },
-          ],
-        });
+
+        const footerText = `In #${channel.name} - ${linkMessage.createdAt
+          .toLocaleString('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          })
+          .replace(/\//g, '/')}`;
+
+        const embed =
+          linkMessage.content &&
+          new EmbedBuilder()
+            .setDescription(linkMessage.content)
+            .setAuthor({
+              name: linkMessage.author.tag,
+              iconURL: linkMessage.author.displayAvatarURL(),
+              url: linkMessage.url,
+            })
+            .setFooter({ text: footerText, iconURL: guild.iconURL() ?? '' });
+
+        const files = linkMessage.attachments
+          .map((attachment) => {
+            const fileName = attachment.name ?? 'file';
+            const fileUrl = attachment.url ?? attachment.proxyURL ?? '';
+            return `- [${fileName}](${fileUrl})`;
+          })
+          .join('\n');
+
+        const nullEmbed = embed !== '';
+
+        // Send the message content and the embed
+        if (files) {
+          await message.channel.send(
+            'The attached file:\n' +
+              files +
+              (nullEmbed
+                ? ''
+                : `\nAuthor: ${linkMessage.author.tag}\n${footerText}`),
+          );
+        }
+
+        if (nullEmbed) {
+          await message.channel.send({ embeds: [embed] });
+        }
       } catch (error) {
-        console.error(`Error processing message link: ${link}`, error);
+        if (
+          error instanceof Error &&
+          !error.message.includes('Unknown Guild')
+        ) {
+          console.error(`Error processing message link: ${link}`, error);
+        }
       }
     }
   },
