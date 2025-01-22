@@ -1,4 +1,5 @@
 # Discord Bot Message Preview
+
 This repository shows a preview when you attach a link to a previous message
 
 ## Features
@@ -75,11 +76,3 @@ This repository shows a preview when you attach a link to a previous message
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
-
-## Acknowledgments
-
-- Inspired by the community and contributors of TypeScript and Discord.js.
-
----
-
-For more information, visit the [repository](https://github.com/minagishl/discord-bot-message-preview).
