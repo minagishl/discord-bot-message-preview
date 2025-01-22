@@ -40,29 +40,35 @@ export default {
         }
 
         const linkMessage = await channel.messages.fetch(messageId);
+        const isPrivacyMode = message.content.startsWith('!privacy');
 
-        const footerText = `In #${channel.name} - ${linkMessage.createdAt
-          .toLocaleString('ja-JP', {
-            timeZone: 'Asia/Tokyo',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-          })
-          .replace(/\//g, '/')}`;
+        const footerText = isPrivacyMode
+          ? 'Cannot display due to private setting'
+          : `In #${channel.name} - ${linkMessage.createdAt
+              .toLocaleString('ja-JP', {
+                timeZone: 'Asia/Tokyo',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              })
+              .replace(/\//g, '/')}`;
 
-        const embed =
-          linkMessage.content &&
-          new EmbedBuilder()
-            .setDescription(linkMessage.content)
-            .setAuthor({
-              name: linkMessage.author.tag,
-              iconURL: linkMessage.author.displayAvatarURL(),
-              url: linkMessage.url,
-            })
-            .setFooter({ text: footerText, iconURL: guild.iconURL() ?? '' });
+        const embed = linkMessage.content
+          ? new EmbedBuilder()
+              .setDescription(linkMessage.content)
+              .setFooter({ text: footerText, iconURL: guild.iconURL() ?? '' })
+              .setURL(linkMessage.url)
+          : '';
+
+        if (!isPrivacyMode && embed !== '') {
+          embed.setAuthor({
+            name: linkMessage.author.tag,
+            iconURL: linkMessage.author.displayAvatarURL(),
+          });
+        }
 
         const files = linkMessage.attachments
           .map((attachment) => {
@@ -81,7 +87,7 @@ export default {
               files +
               (nullEmbed
                 ? ''
-                : `\nAuthor: ${linkMessage.author.tag}\n${footerText}`),
+                : `\nAuthor: ${isPrivacyMode ? 'Private' : linkMessage.author.tag}\n${footerText}`),
           );
         }
 
