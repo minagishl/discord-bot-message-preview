@@ -1,4 +1,4 @@
-import { Events, type Interaction } from "discord.js";
+import { Events, type Interaction } from 'discord.js';
 
 export default {
   name: Events.InteractionCreate,
@@ -8,7 +8,7 @@ export default {
 
     // If the interaction is not in a guild, send a DM block embed and delete it after 5 seconds
     if (interaction.guild == null) {
-      await interaction.reply("This command can only be used in a server.");
+      await interaction.reply('This command can only be used in a server.');
       return;
     }
 
@@ -39,7 +39,7 @@ export default {
     } catch (err: any) {
       // If an error occurs, log the error and send an error message to the user
       console.error(err);
-      await interaction.reply("An error occurred while executing the command.");
+      await interaction.reply('An error occurred while executing the command.');
     }
   },
 };

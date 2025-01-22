@@ -1,4 +1,4 @@
-import { Events, type Message } from "discord.js";
+import { Events, type Message } from 'discord.js';
 
 export default {
   name: Events.MessageCreate,
@@ -16,28 +16,29 @@ export default {
 
     // Process all message links
     for (const link of messageLink) {
-      const [guildId, channelId, messageId] = link.split("/").slice(-3);
+      const [guildId, channelId, messageId] = link.split('/').slice(-3);
       if (!guildId || !channelId || !messageId) continue;
 
       try {
         // Check if the guild exists.
         const guild = await message.client.guilds.fetch(guildId);
         if (!guild) {
-          console.error("Guild not found");
+          console.error('Guild not found');
           continue;
         }
 
         // Check if the channel exists.
         const channel = await guild.channels.fetch(channelId);
         if (!channel) {
-          console.error("Channel not found");
+          console.error('Channel not found');
           continue;
         }
 
         if (!channel.isTextBased()) {
-          console.error("Channel is not text-based");
+          console.error('Channel is not text-based');
           continue;
         }
+
         const linkMessage = await channel.messages.fetch(messageId);
         await message.channel.send({
           embeds: [
@@ -51,17 +52,17 @@ export default {
               },
               footer: {
                 text: `In #${channel.name} - ${linkMessage.createdAt
-                  .toLocaleString("ja-JP", {
-                    timeZone: "Asia/Tokyo",
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
+                  .toLocaleString('ja-JP', {
+                    timeZone: 'Asia/Tokyo',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
                     hour12: false,
                   })
-                  .replace(/\//g, "/")}`,
-                icon_url: guild.iconURL() ?? "",
+                  .replace(/\//g, '/')}`,
+                icon_url: guild.iconURL() ?? '',
               },
             },
           ],
