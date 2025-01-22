@@ -35,7 +35,8 @@ This repository shows a preview when you attach a link to a previous message
 1. Create a `.env` file in the root directory and add your Discord bot token:
 
    ```env
-   DISCORD_TOKEN=your-token-here
+   TOKEN='YOUR_DISCORD_BOT_TOKEN'
+   CLIENT_ID='YOUR_DISCORD_CLIENT_ID'
    ```
 
 2. Start the bot:
