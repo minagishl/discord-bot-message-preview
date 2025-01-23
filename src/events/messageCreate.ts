@@ -7,7 +7,7 @@ export default {
 
     // Regular expression checks for inclusion of Discord message links
     const messageLinkRegex =
-      /https:\/\/discord\.com\/channels\/(\d{19})\/(\d{19})\/(\d{19})/g;
+      /https:\/\/(ptb\.)?discord\.com\/channels\/(\d{19})\/(\d{19})\/(\d{19})/g;
     if (!messageLinkRegex.test(message.content)) return;
 
     const messageLink = message.content.match(messageLinkRegex);
